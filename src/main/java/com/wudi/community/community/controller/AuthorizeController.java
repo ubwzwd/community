@@ -1,6 +1,7 @@
 package com.wudi.community.community.controller;
 
 import com.wudi.community.community.dto.AccessTokenDTO;
+import com.wudi.community.community.dto.GithubUser;
 import com.wudi.community.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,9 @@ public class AuthorizeController {
         accessTokenDTO.setClient_id("c0a1a097007740f29a6a");
         accessTokenDTO.setClient_secret("f34bc6b12449e30aca44cb34fa25d8a84e4087e0");
         accessTokenDTO.setState(state);
-        githubProvider.getAccessToken(accessTokenDTO);
+        String accessToken = githubProvider.getAccessToken(accessTokenDTO);
+        GithubUser user = githubProvider.getUser(accessToken);
+        System.out.println(user.getName());
         return "index";
     }
 }
