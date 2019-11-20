@@ -1,4 +1,4 @@
-package com.wudi.community.community.dto;
+package com.wudi.community.dto;
 
 public class AccessTokenDTO {
     private String client_id;

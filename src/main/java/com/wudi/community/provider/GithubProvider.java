@@ -1,8 +1,8 @@
-package com.wudi.community.community.provider;
+package com.wudi.community.provider;
 
 import com.alibaba.fastjson.JSON;
-import com.wudi.community.community.dto.AccessTokenDTO;
-import com.wudi.community.community.dto.GithubUser;
+import com.wudi.community.dto.AccessTokenDTO;
+import com.wudi.community.dto.GithubUser;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
 
