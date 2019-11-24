@@ -45,7 +45,7 @@ public class AuthorizeController {
         accessTokenDTO.setState(state);
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser githubUser = githubProvider.getUser(accessToken);
-        if(githubUser!=null) {
+        if(githubUser!=null && githubUser.getId() != null) {
             // log in successfully
             // connect to database and insert
             // write session

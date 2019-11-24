@@ -21,7 +21,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Community Demo</a>
+        <a class="navbar-brand" href="/">Community Demo</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -33,6 +33,9 @@
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
             <ul class="nav navbar-nav ml-auto">
+                <li th:if="${session.user != null}">
+                    <a class="btn btn-outline-success my-2 my-sm-0" href="/publish">Publish</a>
+                </li>
                 <li class="nav-item dropdown" th:if="${session.user != null}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false" th:text="${session.user.getName()}">
@@ -65,22 +68,31 @@
             <form action="/publish" method="post">
                 <div class="form-group">
                     <label for="title">Title for post(in short)</label>
-                    <input type="text" class="form-control" id="title" aria-describedby="title" placeholder="Title here">
+                    <input type="text" class="form-control" id="title" th:value="${title}" name="title" aria-describedby="title" placeholder="Title here">
                 </div>
                 <div class="form-group">
                     <label for="description">Details</label>
-                    <textarea type="text" class="form-control" id="description" aria-describedby="description" placeholder="Details here" rows="3"></textarea>
+                    <textarea type="text" class="form-control" id="description" th:value="${description}" name="description" aria-describedby="description" placeholder="Details here" rows="3"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="tag">Add tag</label>
-                    <input type="text" class="form-control" id="tag" aria-describedby="tag" placeholder="Tag here, split with comma">
+                    <input type="text" class="form-control" id="tag" th:value="${tag}" name="tag" aria-describedby="tag" placeholder="Tag here, split with comma">
                 </div>
 
-                <span class="alert alert-danger" th:text="${error}"></span>
-                <button type="submit" class="btn btn-success btn-publish">Publish</button>
+                <div class="container-fluid main">
+                    <div class="row">
+                        <div class="alert alert-danger col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12" style="float: left" th:text="${error}"
+                             th:if="${error != null}"></div>
+                        <div class="col-xl-1 col-lg-1 col-md-12 col-sm-12 col-12">
+                            <button type="submit" class="btn btn-success btn-publish" style="float: right">Publish</button>
+                        </div>
+
+                    </div>
+
+                </div>
             </form>
         </div>
-        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-12">
             <h3>Instructions for publication</h3>
             1. Title: <br>
             2. Detail: <br>
