@@ -1,12 +1,9 @@
 package com.wudi.community.controller;
 
 import com.wudi.community.dto.PostDTO;
-import com.wudi.community.mapper.PostMapper;
 import com.wudi.community.mapper.UserMapper;
-import com.wudi.community.model.Post;
 import com.wudi.community.model.User;
 import com.wudi.community.service.PostService;
-import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
