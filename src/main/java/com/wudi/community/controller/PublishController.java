@@ -78,7 +78,7 @@ public class PublishController {
         post.setTitle(title);
         post.setDescription(description);
         post.setTag(tag);
-        post.setAuthorId(user.getId());
+        post.setUserId(user.getId());
         post.setGmtCreate(System.currentTimeMillis());
         post.setGmtModified(post.getGmtCreate());
         postMapper.create(post);
