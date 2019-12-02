@@ -81,10 +81,14 @@
 
                 <div class="container-fluid main">
                     <div class="row">
-                        <div class="alert alert-danger col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12" style="float: left" th:text="${error}"
-                             th:if="${error != null}"></div>
-                        <div class="col-xl-1 col-lg-1 col-md-12 col-sm-12 col-12">
-                            <button type="submit" class="btn btn-success btn-publish" style="float: right">Publish</button>
+                        <div class="ol-xl-10 col-lg-10 col-md-10 col-sm-12 col-12" style="float: left" >
+                            <div class="alert alert-danger" ol-xl-12 col-lg-12 col-md-12 col-sm-12 col-12
+                                 th:text="${error}"
+                                 th:if="${error != null}">
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 col-12">
+                            <button type="submit" class="btn btn-success btn-publish" style="float: left">Publish</button>
                         </div>
 
                     </div>
