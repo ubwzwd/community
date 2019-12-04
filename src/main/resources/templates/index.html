@@ -63,7 +63,7 @@
             <h2><span class="fas fa-list-ul" aria-hidden="true"></span>Discover</h2>
             <hr>
 
-            <div class="media" th:each="post : ${posts}">
+            <div class="media" th:each="post : ${pagination.posts}">
                 <img th:src="${post.user.avatarUrl}" class="mr-3 rounded">
                 <div class="media-body">
                     <h5 class="mt-0" th:text="${post.title}"></h5>

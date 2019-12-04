@@ -1,5 +1,6 @@
 package com.wudi.community.service;
 
+import com.wudi.community.dto.PaginationDTO;
 import com.wudi.community.dto.PostDTO;
 import com.wudi.community.mapper.PostMapper;
 import com.wudi.community.mapper.UserMapper;
@@ -21,9 +22,15 @@ public class PostService {
     @Autowired(required = false)
     private UserMapper userMapper;
 
-    public List<PostDTO> list() {
-        List<Post> posts = postMapper.list();
+    public PaginationDTO list(Integer page, Integer size) {
+
+        // the begin index- of each page
+        Integer offset = size*(page-1);
+
+        List<Post> posts = postMapper.list(offset, size);
         List<PostDTO> postDTOS = new ArrayList<>();
+
+        PaginationDTO paginationDTO = new PaginationDTO();
         for(Post post : posts){
             User user = userMapper.findById(post.getUserId());
             PostDTO postDTO = new PostDTO();
@@ -31,7 +38,12 @@ public class PostService {
             postDTO.setUser(user);
             postDTOS.add(postDTO);
         }
-        return postDTOS;
+
+        paginationDTO.setPosts(postDTOS);
+        // totalCount is the total number of posts
+        Integer totalCount = postMapper.count();
+        paginationDTO.setPagination(totalCount, page, size);
+        return paginationDTO;
     }
 
 

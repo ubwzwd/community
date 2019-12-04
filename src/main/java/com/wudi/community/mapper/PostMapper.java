@@ -14,6 +14,9 @@ public interface PostMapper {
     @Insert("insert into post (title,description,gmt_create,gmt_modified,user_id,tag) values (#{title},#{description},#{gmtCreate},#{gmtModified},#{userId},#{tag})")
     public void create(Post post);
 
-    @Select("select * from POST")
-    List<Post> list();
+    @Select("select * from POST limit #{size} offset #{offset}")
+    List<Post> list(Integer offset, Integer size);
+
+    @Select("select count(1) from POST")
+    Integer count();
 }
