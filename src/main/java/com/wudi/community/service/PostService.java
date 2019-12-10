@@ -6,6 +6,7 @@ import com.wudi.community.mapper.PostMapper;
 import com.wudi.community.mapper.UserMapper;
 import com.wudi.community.model.Post;
 import com.wudi.community.model.User;
+import javafx.scene.control.Pagination;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,13 +25,19 @@ public class PostService {
 
     public PaginationDTO list(Integer page, Integer size) {
 
+        // set pagination
+        // totalCount is the total number of posts
+        Integer totalCount = postMapper.count();
+        PaginationDTO paginationDTO = new PaginationDTO();
+        paginationDTO.setPagination(totalCount, page, size);
+        page = paginationDTO.getPage();
+
+        // set posts
         // the begin index- of each page
         Integer offset = size*(page-1);
-
+//        List<Post> posts = postMapper.list(offset, (totalCount-offset>=size ? size : totalCount-offset));
         List<Post> posts = postMapper.list(offset, size);
         List<PostDTO> postDTOS = new ArrayList<>();
-
-        PaginationDTO paginationDTO = new PaginationDTO();
         for(Post post : posts){
             User user = userMapper.findById(post.getUserId());
             PostDTO postDTO = new PostDTO();
@@ -38,13 +45,35 @@ public class PostService {
             postDTO.setUser(user);
             postDTOS.add(postDTO);
         }
-
         paginationDTO.setPosts(postDTOS);
-        // totalCount is the total number of posts
-        Integer totalCount = postMapper.count();
-        paginationDTO.setPagination(totalCount, page, size);
+
         return paginationDTO;
     }
 
 
+    public PaginationDTO list(Integer userId, Integer page, Integer size) {
+        // set pagination
+        // totalCount is the total number of posts
+        Integer totalCount = postMapper.countByUserId(userId);
+        PaginationDTO paginationDTO = new PaginationDTO();
+        paginationDTO.setPagination(totalCount, page, size);
+        page = paginationDTO.getPage();
+
+        // set posts
+        // the begin index- of each page
+        Integer offset = size*(page-1);
+//        List<Post> posts = postMapper.list(offset, (totalCount-offset>=size ? size : totalCount-offset));
+        List<Post> posts = postMapper.listByUserId(userId, offset, size);
+        List<PostDTO> postDTOS = new ArrayList<>();
+        for(Post post : posts){
+            User user = userMapper.findById(post.getUserId());
+            PostDTO postDTO = new PostDTO();
+            BeanUtils.copyProperties(post, postDTO);
+            postDTO.setUser(user);
+            postDTOS.add(postDTO);
+        }
+        paginationDTO.setPosts(postDTOS);
+
+        return paginationDTO;
+    }
 }

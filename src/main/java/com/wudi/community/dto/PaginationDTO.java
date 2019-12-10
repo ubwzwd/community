@@ -14,11 +14,26 @@ public class PaginationDTO {
     private boolean showLastPage;
     // the current page number
     private Integer page;
+    private Integer totalPage;
     // the list of pages shown in the bar
     private List<Integer> pages = new ArrayList<>();
 
     public void setPagination(Integer totalCount, Integer page, Integer size) {
-        Integer totalPage = (int)Math.ceil(totalCount / size);
+
+        totalPage = (totalCount + size - 1) / size;
+        if(page < 1) page = 1;
+        else if(page > totalPage) page = totalPage;
+        this.page = page;
+
+        pages.add(page);
+        for(int i = 1; i < 3; i++){
+            if(page-i > 0){
+                pages.add(0, page-i);
+            }
+            if(page+i <= totalPage){
+                pages.add(page+i);
+            }
+        }
 
         // weather show the previous or next page
         if(page == 1){
@@ -40,5 +55,11 @@ public class PaginationDTO {
         } else{
             showFirstPage = true;
         }
+        if(pages.contains((totalPage))){
+            showLastPage = false;
+        } else{
+            showLastPage = true;
+        }
+
     }
 }

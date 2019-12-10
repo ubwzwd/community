@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      lang="en">
+            xmlns:th="http://www.thymeleaf.org"
+            lang="en">
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="fontawesome/css/all.css">
-    <link rel="stylesheet" href="css/community.css">
+    <link rel="stylesheet" href="/fontawesome/css/all.css">
+    <link rel="stylesheet" href="/css/community.css">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
@@ -16,23 +16,23 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
-    <title>Community Demo</title>
+    <title th:text="${sectionName}"></title>
     <meta charset="UTF-8">
 </head>
+
 <body>
 <div th:replace="navigation :: nav"></div>
 
-<div class="container-fluid main">
+<div class="container-fluid main profile">
     <div class="row">
         <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
-            <h2><span class="fas fa-list-ul" aria-hidden="true"></span>Discover</h2>
+            <h2><span th:text="${sectionName}"></span></h2>
             <hr>
 
             <div class="media" th:each="post : ${pagination.posts}">
                 <img th:src="${post.user.avatarUrl}" class="mr-3 rounded">
                 <div class="media-body">
                     <h5 class="mt-0" th:text="${post.title}"></h5>
-                    <span th:text="${post.description}"></span> <br>
                     <span class="text-desc"><span th:text="${post.commentCount}"></span> replies; <span
                             th:text="${post.viewCount}"></span> views; posted on <span
                             th:text="${#dates.format(post.gmtCreate, 'dd MMMM yyyy')}"></span></span>
@@ -68,13 +68,17 @@
             </nav>
         </div>
         <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-12">
-            <h3>Top topics</h3>
-            1. Title: <br>
-            2. Detail: <br>
-            3. Tag: <br>
+            <div class="list-group section">
+                <a href="/profile/posts" th:class="${section == 'posts'} ? 'active list-group-item d-flex justify-content-between align-items-center' : 'list-group-item d-flex justify-content-between align-items-center'">
+                    My Posts
+                    <span class="badge badge-primary badge-pill">14</span>
+                </a>
+                <a href="/profile/replies" th:class="${section == 'replies'} ? 'active list-group-item d-flex justify-content-between align-items-center' : 'list-group-item d-flex justify-content-between align-items-center'">
+                    Most Recent Replies
+                    <span class="badge badge-primary badge-pill">2</span>
+                </a>
+            </div>
         </div>
     </div>
 </div>
-
 </body>
-</html>
