@@ -6,7 +6,6 @@ import com.wudi.community.mapper.PostMapper;
 import com.wudi.community.mapper.UserMapper;
 import com.wudi.community.model.Post;
 import com.wudi.community.model.User;
-import javafx.scene.control.Pagination;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
