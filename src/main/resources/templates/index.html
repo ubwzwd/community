@@ -31,11 +31,13 @@
             <div class="media" th:each="post : ${pagination.posts}">
                 <img th:src="${post.user.avatarUrl}" class="mr-3 rounded">
                 <div class="media-body">
-                    <h5 class="mt-0" th:text="${post.title}"></h5>
+                    <h5 class="mt-0">
+                        <a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}"></a>
+                    </h5>
                     <span th:text="${post.description}"></span> <br>
                     <span class="text-desc"><span th:text="${post.commentCount}"></span> replies; <span
                             th:text="${post.viewCount}"></span> views; posted on <span
-                            th:text="${#dates.format(post.gmtCreate, 'dd MMMM yyyy')}"></span></span>
+                            th:text="${#dates.format(post.gmtCreate, 'dd MMMM yyyy HH:mm:ss')}"></span></span>
                 </div>
             </div>
             <nav aria-label="Page navigation example">
