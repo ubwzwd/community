@@ -2,9 +2,9 @@ package com.wudi.community.controller;
 
 import com.wudi.community.dto.AccessTokenDTO;
 import com.wudi.community.dto.GithubUser;
-import com.wudi.community.mapper.UserMapper;
 import com.wudi.community.model.User;
 import com.wudi.community.provider.GithubProvider;
+import com.wudi.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -29,8 +29,8 @@ public class AuthorizeController {
     @Value("${github.redirect.uri}")
     private String redirectUri;
 
-    @Autowired(required = false)
-    private UserMapper userMapper;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name="code") String code,
@@ -54,16 +54,21 @@ public class AuthorizeController {
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             user.setAccountId(String.valueOf(githubUser.getId()));
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githubUser.getAvatarUrl());
             response.addCookie(new Cookie("token", token));
-            userMapper.insert(user);
+            userService.createOrUpdate(user);
             request.getSession().setAttribute("user", githubUser);
-            return "redirect:/";
-        } else {
-            // failure, log in again
-            return "redirect:/";
         }
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }

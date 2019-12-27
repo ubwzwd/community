@@ -1,12 +1,14 @@
 package com.wudi.community.controller;
 
-import com.wudi.community.mapper.PostMapper;
+import com.wudi.community.dto.PostDTO;
 import com.wudi.community.model.Post;
 import com.wudi.community.model.User;
+import com.wudi.community.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -15,9 +17,20 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class PublishController {
 
-    @Autowired(required = false)
-    private PostMapper postMapper;
+    @Autowired
+    private PostService questionService;
 
+    @GetMapping("/publish/{id}")
+    public String edit(@PathVariable(name = "id") Integer postId,
+                       Model model){
+        // get the content of the postDTO
+        PostDTO postDTO = questionService.getById(postId);
+        model.addAttribute("title", postDTO.getTitle());
+        model.addAttribute("description", postDTO.getDescription());
+        model.addAttribute("tag", postDTO.getTag());
+        model.addAttribute("id", postDTO.getId());
+        return "publish";
+    }
 
     @GetMapping("/publish")
     public String publish() {
@@ -30,6 +43,7 @@ public class PublishController {
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "tag", required = false) String tag,
+            @RequestParam(value = "id", required = false) Integer id,
             HttpServletRequest request,
             Model model) {
 
@@ -37,17 +51,17 @@ public class PublishController {
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
 
-        if (title == null || title == "") {
+        if (title == null || title.equals("")) {
             model.addAttribute("error", "The title cannot be empty");
             return "publish";
         }
 
-        if (description == null || description == "") {
+        if (description == null || description.equals("")) {
             model.addAttribute("error", "The description cannot be empty");
             return "publish";
         }
 
-        if (tag == null || tag == "") {
+        if (tag == null || tag.equals("")) {
             model.addAttribute("error", "The tag cannot be empty");
             return "publish";
         }
@@ -64,11 +78,8 @@ public class PublishController {
         post.setDescription(description);
         post.setTag(tag);
         post.setUserId(user.getId());
-        post.setGmtCreate(System.currentTimeMillis());
-        post.setGmtModified(post.getGmtCreate());
-        postMapper.create(post);
-
-        System.out.println(title);
+        post.setId(id);
+        questionService.createOrUpdate(post);
 
         return "redirect:/";
     }

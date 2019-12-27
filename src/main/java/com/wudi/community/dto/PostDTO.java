@@ -9,7 +9,7 @@ public class PostDTO {
     private String description;
     private Long gmtCreate;
     private Long gmtModified;
-    private Integer authorId;
+    private Integer userId;
     private Integer commentCount;
     private Integer viewCount;
     private Integer likeCount;

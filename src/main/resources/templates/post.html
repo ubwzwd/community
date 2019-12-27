@@ -35,7 +35,7 @@
             <hr>
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12" th:text="${postDTO.description}"></div>
             <hr>
-            <a th:href="@{'/publish/' + ${postDTO.id}}" class="community-menu">
+            <a th:href="@{'/publish/' + ${postDTO.id}}" class="community-menu" th:if="${session.user != null && session.user.id == postDTO.userId}">
                 <span class="fas fa-pencil-alt" aria-hidden="true"></span>
                 edit
             </a>
