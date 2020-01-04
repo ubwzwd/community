@@ -5,7 +5,9 @@ import com.wudi.community.dto.PostDTO;
 import com.wudi.community.mapper.PostMapper;
 import com.wudi.community.mapper.UserMapper;
 import com.wudi.community.model.Post;
+import com.wudi.community.model.PostExample;
 import com.wudi.community.model.User;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,7 @@ public class PostService {
 
         // set pagination
         // totalCount is the total number of posts
-        Integer totalCount = postMapper.count();
+        Integer totalCount = (int) postMapper.countByExample(new PostExample());
         PaginationDTO paginationDTO = new PaginationDTO();
         paginationDTO.setPagination(totalCount, page, size);
         page = paginationDTO.getPage();
@@ -35,10 +37,11 @@ public class PostService {
         // the begin index- of each page
         Integer offset = size*(page-1);
 //        List<Post> posts = postMapper.list(offset, (totalCount-offset>=size ? size : totalCount-offset));
-        List<Post> posts = postMapper.list(offset, size);
+        // List<Post> posts = postMapper.count();
+        List<Post> posts = postMapper.selectByExampleWithBLOBsWithRowbounds(new PostExample(), new RowBounds(offset, size));
         List<PostDTO> postDTOS = new ArrayList<>();
         for(Post post : posts){
-            User user = userMapper.findById(post.getUserId());
+            User user = userMapper.selectByPrimaryKey(post.getUserId());
             PostDTO postDTO = new PostDTO();
             BeanUtils.copyProperties(post, postDTO);
             postDTO.setUser(user);
@@ -53,7 +56,10 @@ public class PostService {
     public PaginationDTO list(Integer userId, Integer page, Integer size) {
         // set pagination
         // totalCount is the total number of posts
-        Integer totalCount = postMapper.countByUserId(userId);
+        PostExample postExample = new PostExample();
+        postExample.createCriteria()
+                .andUserIdEqualTo(userId);
+        Integer totalCount = (int) postMapper.countByExample(postExample);
         PaginationDTO paginationDTO = new PaginationDTO();
         paginationDTO.setPagination(totalCount, page, size);
         page = paginationDTO.getPage();
@@ -62,10 +68,14 @@ public class PostService {
         // the begin index- of each page
         Integer offset = size*(page-1);
 //        List<Post> posts = postMapper.list(offset, (totalCount-offset>=size ? size : totalCount-offset));
-        List<Post> posts = postMapper.listByUserId(userId, offset, size);
+//        List<Post> posts = postMapper.listByUserId(userId, offset, size);
+        PostExample postExample1 = new PostExample();
+        postExample1.createCriteria()
+                .andUserIdEqualTo(userId);
+        List<Post> posts = postMapper.selectByExampleWithBLOBsWithRowbounds(postExample1, new RowBounds(offset, size));
         List<PostDTO> postDTOS = new ArrayList<>();
         for(Post post : posts){
-            User user = userMapper.findById(post.getUserId());
+            User user = userMapper.selectByPrimaryKey(post.getUserId());
             PostDTO postDTO = new PostDTO();
             BeanUtils.copyProperties(post, postDTO);
             postDTO.setUser(user);
@@ -77,10 +87,10 @@ public class PostService {
     }
 
     public PostDTO getById(Integer id) {
-        Post post = postMapper.getById(id);
+        Post post = postMapper.selectByPrimaryKey(id);
         PostDTO postDTO = new PostDTO();
         BeanUtils.copyProperties(post, postDTO);
-        User user = userMapper.findById(post.getUserId());
+        User user = userMapper.selectByPrimaryKey(post.getUserId());
         postDTO.setUser(user);
         return postDTO;
     }
@@ -90,11 +100,11 @@ public class PostService {
             // create
             post.setGmtCreate(System.currentTimeMillis());
             post.setGmtModified(post.getGmtCreate());
-            postMapper.create(post);
+            postMapper.insert(post);
         } else{
             // update
             post.setGmtModified(System.currentTimeMillis());
-            postMapper.update(post);
+            postMapper.updateByPrimaryKeySelective(post);
         }
     }
 }

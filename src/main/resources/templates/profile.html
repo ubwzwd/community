@@ -32,7 +32,9 @@
             <div class="media" th:each="post : ${pagination.posts}">
                 <img th:src="${post.user.avatarUrl}" class="mr-3 rounded">
                 <div class="media-body">
-                    <h5 class="mt-0" th:text="${post.title}"></h5>
+                    <h5 class="mt-0">
+                        <a th:href="@{'/post/' + ${post.id}}" th:text="${post.title}"></a>
+                    </h5>
                     <span class="text-desc"><span th:text="${post.commentCount}"></span> replies; <span
                             th:text="${post.viewCount}"></span> views; posted on <span
                             th:text="${#dates.format(post.gmtCreate, 'dd MMMM yyyy')}"></span></span>
@@ -71,7 +73,7 @@
             <div class="list-group section">
                 <a href="/profile/posts" th:class="${section == 'posts'} ? 'active list-group-item d-flex justify-content-between align-items-center' : 'list-group-item d-flex justify-content-between align-items-center'">
                     My Posts
-                    <span class="badge badge-primary badge-pill">14</span>
+                    <span class="badge badge-primary badge-pill" th:text="${pagination.posts.size()}"></span>
                 </a>
                 <a href="/profile/replies" th:class="${section == 'replies'} ? 'active list-group-item d-flex justify-content-between align-items-center' : 'list-group-item d-flex justify-content-between align-items-center'">
                     Most Recent Replies
