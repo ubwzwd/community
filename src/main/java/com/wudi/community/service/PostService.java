@@ -2,6 +2,9 @@ package com.wudi.community.service;
 
 import com.wudi.community.dto.PaginationDTO;
 import com.wudi.community.dto.PostDTO;
+import com.wudi.community.exception.CustomizedErrorCode;
+import com.wudi.community.exception.CustomizedException;
+import com.wudi.community.mapper.PostExtMapper;
 import com.wudi.community.mapper.PostMapper;
 import com.wudi.community.mapper.UserMapper;
 import com.wudi.community.model.Post;
@@ -23,6 +26,9 @@ public class PostService {
 
     @Autowired(required = false)
     private UserMapper userMapper;
+
+    @Autowired
+    private PostExtMapper postExtMapper;
 
     public PaginationDTO list(Integer page, Integer size) {
 
@@ -88,6 +94,9 @@ public class PostService {
 
     public PostDTO getById(Integer id) {
         Post post = postMapper.selectByPrimaryKey(id);
+        if(post == null){
+            throw new CustomizedException(CustomizedErrorCode.QUESTION_NOT_FOUND);
+        }
         PostDTO postDTO = new PostDTO();
         BeanUtils.copyProperties(post, postDTO);
         User user = userMapper.selectByPrimaryKey(post.getUserId());
@@ -104,7 +113,15 @@ public class PostService {
         } else{
             // update
             post.setGmtModified(System.currentTimeMillis());
-            postMapper.updateByPrimaryKeySelective(post);
+            int updated = postMapper.updateByPrimaryKeySelective(post);
+            if(updated != 1){
+                throw new CustomizedException(CustomizedErrorCode.QUESTION_NOT_FOUND);
+            }
         }
+    }
+
+    public void incView(Integer id) {
+        Post updatePost = postMapper.selectByPrimaryKey(id);
+        postExtMapper.incView(updatePost);
     }
 }

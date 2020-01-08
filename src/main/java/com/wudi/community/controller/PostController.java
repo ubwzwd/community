@@ -18,6 +18,8 @@ public class PostController {
     public String post(@PathVariable("id") Integer id,
                        Model model){
         PostDTO postDTO = postService.getById(id);
+        // every time viewed, the viewCount++
+        postService.incView(id);
         model.addAttribute(postDTO);
         return "post";
     }
